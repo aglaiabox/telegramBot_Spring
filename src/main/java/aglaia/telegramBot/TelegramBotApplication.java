@@ -15,12 +15,11 @@ public class TelegramBotApplication {
 
 		TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
 
-		String botName = "asdfg001";
-		String botUsername = "asdfg000bot";
-		String botToken = "5754138882:AAEpWoxDSDuLOooOodwj3y2J_QOgd2oRT-U";
+		String botName = System.getenv("BOT_NAME");
+		String botUsername = System.getenv("BOT_USERNAME");
+		String botToken = System.getenv("BOT_TOKEN");
 		botsApi.registerBot(new Bot(botName, botUsername, botToken));
 
-		System.out.println("Bot have been created, my general ^^");
 
 	}
 
