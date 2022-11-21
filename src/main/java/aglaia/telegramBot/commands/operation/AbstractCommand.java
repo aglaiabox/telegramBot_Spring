@@ -1,6 +1,6 @@
 package aglaia.telegramBot.commands.operation;
 
-import aglaia.telegramBot.model.AbstractTask;
+import aglaia.telegramBot.model.tasks.AbstractTask;
 import aglaia.telegramBot.service.operation.AbstractCommandService;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -37,13 +37,8 @@ public abstract class AbstractCommand implements IBotCommand {
 
         SendMessage answer = new SendMessage();
         AbstractTask task = abstractCommandService.giveMeATask(message.getChatId());
-        if (task != null){
-            answer.setText(task.getProblem());
-        } else {
-            answer.setText(NO_MORE_TASKS);
-        }
 
-
+        answer.setText(task.getProblem());
         answer.setChatId(message.getChatId());
 
         try {

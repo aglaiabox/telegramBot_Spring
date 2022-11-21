@@ -1,4 +1,4 @@
-package aglaia.telegramBot.model;
+package aglaia.telegramBot.model.tasks;
 
 public class KangTask extends AbstractTask {
     public static final String A = "/a";

@@ -1,10 +1,10 @@
 package aglaia.telegramBot.service.operation;
 
 import aglaia.telegramBot.database.Database;
-import aglaia.telegramBot.model.AbstractTask;
+import aglaia.telegramBot.model.tasks.AbstractTask;
 import aglaia.telegramBot.model.UserBot;
-import aglaia.telegramBot.model.GeneratedTask;
-import aglaia.telegramBot.model.TypeOfGeneratedTask;
+import aglaia.telegramBot.model.tasks.GeneratedTask;
+import aglaia.telegramBot.model.tasks.TypeOfGeneratedTask;
 import org.springframework.stereotype.Component;
 
 @Component

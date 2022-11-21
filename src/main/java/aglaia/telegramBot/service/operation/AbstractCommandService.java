@@ -1,6 +1,6 @@
 package aglaia.telegramBot.service.operation;
 
-import aglaia.telegramBot.model.AbstractTask;
+import aglaia.telegramBot.model.tasks.AbstractTask;
 import aglaia.telegramBot.database.Database;
 
 public abstract class AbstractCommandService {

@@ -1,7 +1,9 @@
 package aglaia.telegramBot.commands.menu;
 
 import aglaia.telegramBot.Bot;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MenuCommandHello extends AbstractMenuCommand {
 
     public static final String TEXT_TO_SEND_COM_HELLO = "Привет, добро пожаловать в наш бот." + System.lineSeparator() +
@@ -10,8 +12,8 @@ public class MenuCommandHello extends AbstractMenuCommand {
             "если текстовую задачу из сборника Кенгуру, то команду " + Bot.KANG_TASK + " ." + System.lineSeparator() +
             "Хорошей тренировки!";
 
-    public MenuCommandHello(String identifier, String description) {
-        super(identifier, description,false);
+    public MenuCommandHello() {
+        super("hello", "Начинаем решать примеры на умножение",false);
         super.textToSend = TEXT_TO_SEND_COM_HELLO;
     }
 }

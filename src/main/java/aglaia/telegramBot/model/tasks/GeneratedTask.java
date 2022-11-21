@@ -1,4 +1,4 @@
-package aglaia.telegramBot.model;
+package aglaia.telegramBot.model.tasks;
 
 public class GeneratedTask extends AbstractTask {
     TypeOfGeneratedTask typeOfGeneratedTask;

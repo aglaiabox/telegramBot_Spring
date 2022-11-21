@@ -1,9 +1,7 @@
-package aglaia.telegramBot.model;
+package aglaia.telegramBot.model.tasks;
 
-// TODO изменить. Инфа о задании должна храниться в UserBot
 public abstract class AbstractTask {
 
-    //todo убрать отсюда датабазу и сделать сохранение в сервисе или где-то еще
 
 
     String problem;

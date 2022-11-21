@@ -1,8 +1,9 @@
 package aglaia.telegramBot.service.operation;
 
 import aglaia.telegramBot.database.Database;
-import aglaia.telegramBot.model.AbstractTask;
+import aglaia.telegramBot.model.tasks.AbstractTask;
 import aglaia.telegramBot.model.*;
+import aglaia.telegramBot.model.tasks.KangTask;
 import org.springframework.stereotype.Component;
 
 @Component

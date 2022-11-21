@@ -1,10 +1,7 @@
 package aglaia.telegramBot.database;
 
-import aglaia.telegramBot.model.GeneratedTask;
-import aglaia.telegramBot.model.KangTask;
-import aglaia.telegramBot.model.UserBot;
-import aglaia.telegramBot.model.GeneratedTask;
-import aglaia.telegramBot.model.KangTask;
+import aglaia.telegramBot.model.tasks.GeneratedTask;
+import aglaia.telegramBot.model.tasks.KangTask;
 import aglaia.telegramBot.model.UserBot;
 import org.springframework.stereotype.Component;
 

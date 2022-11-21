@@ -2,10 +2,12 @@ package aglaia.telegramBot.service;
 
 import aglaia.telegramBot.Bot;
 import aglaia.telegramBot.database.Database;
-import aglaia.telegramBot.model.AbstractTask;
-import aglaia.telegramBot.model.KangTask;
+import aglaia.telegramBot.model.tasks.AbstractTask;
+import aglaia.telegramBot.model.tasks.KangTask;
 import aglaia.telegramBot.model.UserBot;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -22,26 +24,59 @@ public class ActiveTaskService {
         this.database = database;
     }
 
-    public String checkAnAnswer (Update update) {
-        Message msg = update.getMessage();
-        Long msgChatId = msg.getChatId();
+
+    public SendMessage handleUserMessage(Update update){
+
+
+        SendMessage answer = new SendMessage();
+        String incommingAnswer;
+        Long msgChatId;
+
+        if (update.hasCallbackQuery()) {
+            CallbackQuery callbackQuery = update.getCallbackQuery();
+            incommingAnswer = callbackQuery.getData();
+            msgChatId = callbackQuery.getMessage().getChatId();
+        } else {
+            Message msg = update.getMessage();
+            msgChatId = msg.getChatId();
+            incommingAnswer = msg.getText();
+        }
+
+        String text;
+
+        if (database.getUserFromDatabase(msgChatId).getActualTask() == null) {
+            text = YOU_DONT_HAVE_AN_ACTIVE_TASK;
+        }
+
+
+        if (isAnswerCorrect(incommingAnswer, msgChatId)){
+            text = RIGHT;
+        } else {
+            text = WRONG;
+        }
+
+        answer.setText(text);
+        answer.setChatId(msgChatId.toString());
+        return answer;
+    }
+
+
+
+    public boolean isAnswerCorrect (String incommingAnswer, Long msgChatId) {
         UserBot userBot = database.getUserFromDatabase(msgChatId);
         AbstractTask actualTask = userBot.getActualTask();
 
-        if (actualTask == null) return YOU_DONT_HAVE_AN_ACTIVE_TASK;
-
-        if (actualTask.getCorrectAnswer().equalsIgnoreCase(msg.getText())) {
+        if (actualTask.getCorrectAnswer().equalsIgnoreCase(incommingAnswer)) {
             if (actualTask instanceof KangTask){
                 userBot.setIndexOfCurrentKangTask(userBot.getIndexOfCurrentKangTask()+1);
             }
             userBot.setActualTask(null);
 
-            return RIGHT;
+            return true;
         }
 
         else {
-            return WRONG;
+            return false;
         }
-
     }
 }

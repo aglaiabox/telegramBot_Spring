@@ -1,6 +1,7 @@
 package aglaia.telegramBot.model;
 
-// TODO тут должна храниться инфа об актуальной задаче каждого типа. + ,возможно, статистика
+import aglaia.telegramBot.model.tasks.AbstractTask;
+
 public class UserBot {
     String name;
     Long chatId;
