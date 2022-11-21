@@ -1,13 +1,18 @@
-package aglaia.telegramBot.service.generateTask;
+package aglaia.telegramBot.service.operation;
 
+import aglaia.telegramBot.database.Database;
 import aglaia.telegramBot.model.AbstractTask;
 import aglaia.telegramBot.model.UserBot;
-import aglaia.telegramBot.model.AbstractTask;
 import aglaia.telegramBot.model.GeneratedTask;
 import aglaia.telegramBot.model.TypeOfGeneratedTask;
-import aglaia.telegramBot.model.UserBot;
+import org.springframework.stereotype.Component;
 
-public class MultiplyTaskService extends AbstractTaskService {
+@Component
+public class CommandMultiplyService extends AbstractCommandService {
+
+    public CommandMultiplyService(Database database) {
+        super(database);
+    }
 
     @Override
     public AbstractTask giveMeATask(Long chatId) {

@@ -6,10 +6,12 @@ import aglaia.telegramBot.model.UserBot;
 import aglaia.telegramBot.model.GeneratedTask;
 import aglaia.telegramBot.model.KangTask;
 import aglaia.telegramBot.model.UserBot;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class Database {
     private static volatile Database database;
     Map<Integer, KangTask> kangTaskMapa;
@@ -23,15 +25,6 @@ public class Database {
         this.kangTaskMapa = new HashMap<>();
         this.usersMapa = new HashMap<>();
         addKangTaskToKangTaskMapa();
-    }
-
-    public static Database getInstance() {
-        if (database == null) {
-            synchronized (Database.class) {
-                if (database == null) database = new Database();
-            }
-        }
-        return database;
     }
 
     public boolean isUserExist(long msgChatId) {

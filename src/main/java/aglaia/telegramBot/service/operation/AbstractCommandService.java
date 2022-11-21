@@ -1,13 +1,13 @@
-package aglaia.telegramBot.service.generateTask;
+package aglaia.telegramBot.service.operation;
 
 import aglaia.telegramBot.model.AbstractTask;
 import aglaia.telegramBot.database.Database;
-import aglaia.telegramBot.model.AbstractTask;
 
-public abstract class AbstractTaskService {
-    Database database = Database.getInstance();
+public abstract class AbstractCommandService {
+    Database database;
 
-    public AbstractTaskService() {
+    public AbstractCommandService(Database database) {
+        this.database = database;
     }
 
 // отвечает за выдачу задания

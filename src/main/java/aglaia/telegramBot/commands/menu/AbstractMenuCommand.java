@@ -1,4 +1,4 @@
-package aglaia.telegramBot.service.commands.menu;
+package aglaia.telegramBot.commands.menu;
 
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

@@ -1,4 +1,4 @@
-package aglaia.telegramBot.service.commands.menu;
+package aglaia.telegramBot.commands.menu;
 
 import aglaia.telegramBot.Bot;
 

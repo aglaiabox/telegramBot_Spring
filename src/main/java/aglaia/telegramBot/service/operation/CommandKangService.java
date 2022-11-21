@@ -1,11 +1,14 @@
-package aglaia.telegramBot.service.generateTask;
+package aglaia.telegramBot.service.operation;
 
+import aglaia.telegramBot.database.Database;
 import aglaia.telegramBot.model.AbstractTask;
 import aglaia.telegramBot.model.*;
+import org.springframework.stereotype.Component;
 
-public class KangTaskService extends AbstractTaskService {
-    public KangTaskService() {
-        super();
+@Component
+public class CommandKangService extends AbstractCommandService {
+    public CommandKangService(Database database) {
+        super(database);
     }
 
     @Override

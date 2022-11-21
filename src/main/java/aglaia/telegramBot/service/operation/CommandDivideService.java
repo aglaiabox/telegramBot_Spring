@@ -1,15 +1,17 @@
-package aglaia.telegramBot.service.generateTask;
+package aglaia.telegramBot.service.operation;
 
-import aglaia.telegramBot.model.AbstractTask;
+import aglaia.telegramBot.database.Database;
 import aglaia.telegramBot.model.AbstractTask;
 import aglaia.telegramBot.model.GeneratedTask;
 import aglaia.telegramBot.model.TypeOfGeneratedTask;
 import aglaia.telegramBot.model.UserBot;
+import org.springframework.stereotype.Component;
 
-public class DivideTaskService extends AbstractTaskService {
+@Component
+public class CommandDivideService extends AbstractCommandService {
 
-    public DivideTaskService() {
-        super();
+    public CommandDivideService(Database database) {
+        super(database);
     }
 
     @Override
