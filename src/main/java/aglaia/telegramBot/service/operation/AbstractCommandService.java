@@ -1,7 +1,9 @@
 package aglaia.telegramBot.service.operation;
 
-import aglaia.telegramBot.model.tasks.AbstractTask;
+import aglaia.telegramBot.entity.AbstractTask;
 import aglaia.telegramBot.database.Database;
+import aglaia.telegramBot.entity.GeneratedTask;
+import aglaia.telegramBot.entity.KangTask;
 
 public abstract class AbstractCommandService {
     Database database;
@@ -13,10 +15,4 @@ public abstract class AbstractCommandService {
 // отвечает за выдачу задания
     public abstract AbstractTask giveMeATask(Long chatId);
 
-    // отвечает за проверку ответа
-    public boolean checkAnswer(Long chatId, String answer) {
-        AbstractTask abstractTask = database.getUserFromDatabase(chatId).getActualTask();
-        if (answer.equalsIgnoreCase(abstractTask.getCorrectAnswer())) return true;
-        return false;
-    }
 }

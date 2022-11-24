@@ -1,13 +1,12 @@
 package aglaia.telegramBot.commands.operation;
 
-import aglaia.telegramBot.service.operation.AbstractCommandService;
 import aglaia.telegramBot.service.operation.CommandMultiplyService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommandMultiply extends AbstractCommand {
+public class TaskCommandMultiply extends AbstractTaskCommand {
 
-    public CommandMultiply(CommandMultiplyService commandMultiplyService) {
+    public TaskCommandMultiply(CommandMultiplyService commandMultiplyService) {
         super("multiply", "Задания на умножение", commandMultiplyService);
     }
 

@@ -15,7 +15,7 @@ public class ReplyKeyBoardMenu {
     public static final String DIVISION = "Тренеруем деление";
     public static final String KANG_TASK = "Текстовая задача";
 
-    public static SendMessage getMainMenuKeyboard(long chatId) {
+    public static SendMessage getMainMenuKeyboard(long chatId, String textToSend) {
 
         ArrayList<KeyboardRow> keyboardRows = new ArrayList<>();
         KeyboardRow keyboardRow1 = new KeyboardRow();
@@ -29,7 +29,7 @@ public class ReplyKeyBoardMenu {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setKeyboard(keyboardRows);
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setText("Chouse the option");
+        sendMessage.setText(textToSend);
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         sendMessage.setChatId(chatId);
         return sendMessage;

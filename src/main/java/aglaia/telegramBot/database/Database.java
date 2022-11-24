@@ -1,9 +1,10 @@
 package aglaia.telegramBot.database;
 
-import aglaia.telegramBot.model.tasks.GeneratedTask;
-import aglaia.telegramBot.model.tasks.KangTask;
-import aglaia.telegramBot.model.UserBot;
+import aglaia.telegramBot.entity.GeneratedTask;
+import aglaia.telegramBot.entity.KangTask;
+import aglaia.telegramBot.entity.UserBot;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.bots.AbsSender;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,13 @@ public class Database {
     }
 
     public UserBot getUserFromDatabase(long chatId) {
+        if (!isUserExist(chatId)) {
+            addNewUserToDatabasa(new UserBot(chatId));
+        }
+        return usersMapa.get(chatId);
+    }
+
+    public UserBot getUserFromDatabase(AbsSender absSender, long chatId) {
         if (!isUserExist(chatId)) {
             addNewUserToDatabasa(new UserBot(chatId));
         }
@@ -80,16 +88,24 @@ public class Database {
                 "3 брата и 2 сестры", "2 брата и 3 сестры",
                 "2 сестры и 2 брата", "3 брата и 3 сестры",
                 "невозможно определить", "b");
-        // B 74 77
+        kangTask.setScoreFor4(74);
+        kangTask.setScoreFor5(77);
+        kangTask.setDifficultyLevel(3);
 
         KangTask kangTask2 = new KangTask("Сумма восьми чисел равна 1997. Число 997 — одно из них. Если его " +
                 "заменить на 799, то новая сумма будет равна", "2195", "1799", "1899", "1979", "1998",
                 "b");
+        kangTask2.setScoreFor4(83);
+        kangTask2.setScoreFor5(81);
+        kangTask2.setDifficultyLevel(3);
         // B 83 81
 
         KangTask kangTask3 = new KangTask("У игрального кубика на всех парах противоположных граней сумма" +
                 " очков одна и та же. Найдите эту сумму", "6", "7", "8", "9", "10",
                 "b");
+        kangTask3.setScoreFor4(44);
+        kangTask3.setScoreFor5(59);
+        kangTask3.setDifficultyLevel(3);
         // B 44 59
 
         kangTaskMapa.put(kangTask.getIndex(), kangTask);
