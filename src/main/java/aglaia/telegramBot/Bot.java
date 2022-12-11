@@ -41,7 +41,7 @@ public class Bot extends TelegramLongPollingCommandBot {
 
     public Bot(List<IBotCommand> commandList, ActiveTaskService ats) {
         super();
-        commandList.forEach(this::register);
+        commandList.forEach(command -> register(command));
         this.ats = ats;
 
     }

@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 public class MenuCommandStart extends AbstractMenuCommand {
+    public static final String WHAT_DO_YOU_WANT_TO_SOLVE = "There are many interesting tasks. What do you want to solve?";
     MenuServiceStart menuServiceStart;
 
     public MenuCommandStart(MenuServiceStart menuServiceStart, RegistrationService registrationService) {
@@ -20,7 +21,7 @@ public class MenuCommandStart extends AbstractMenuCommand {
 
     @Override
     SendMessage startCommandLogic(Long chatId) {
-        String textToSend = "There are many interesting tasks. What do you want to solve?";
+        String textToSend = WHAT_DO_YOU_WANT_TO_SOLVE;
         return ReplyKeyBoardMenu.getMainMenuKeyboard(chatId, textToSend);
     }
 }

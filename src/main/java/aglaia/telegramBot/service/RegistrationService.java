@@ -64,6 +64,6 @@ public class RegistrationService {
                 return I_CAN_T_UNDERSTAND_YOU_PLEASE_DIVE_ME_A_DIGIT_HOW_OLD_ARE_YOU;
             }
         }
-        return LET_S_START;
+        return null;
     }
 }
