@@ -34,8 +34,7 @@ public class KangTask extends AbstractTask {
 
     @OneToOne
     @JoinColumn(name = "next_kang_task_id")
-    KangTask next = null;
-
+    KangTask next;
 
     public KangTask(String problem, String a, String b, String c, String d, String e, String correctAnswer) {
         super(problem, correctAnswer);

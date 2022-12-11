@@ -23,7 +23,7 @@ public class KangTaskService {
     }
 
     public KangTask save(KangTask kangTask) {
-        // тут он должен достать предыдущий канг таск и записать туда  этот
+        // тут он достает предыдущий канг таск и записывает в него ссылку на этот
         Optional<KangTask> optionalKangTaskLast = kangTaskRepository.findByEmptyNext();
 
         kangTaskRepository.save(kangTask);

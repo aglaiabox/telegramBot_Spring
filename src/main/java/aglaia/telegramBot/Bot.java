@@ -59,6 +59,7 @@ public class Bot extends TelegramLongPollingCommandBot {
     @Override
     public void processNonCommandUpdate(Update update) {
 
+        // обработка ответов от пользователя
         SendMessage sendMessage = new SendMessage();
         String incommingAnswer = ats.getAnswerString(update);
         Long msgChatId = ats.getMsgChatId(update);
@@ -76,8 +77,10 @@ public class Bot extends TelegramLongPollingCommandBot {
 
         boolean isAnswerCorrect = false;
 
+        // если регистрация не завершена - то идем регистрироваться
         if (!ats.isRegistrationComplete(msgChatId)) {
             text = ats.setDataOfUserToDatabaseAddGetAnswer(msgChatId, incommingAnswer);
+        // в другом случае, это должен быть ответ на задание
         } else {
             if (!ats.isUserHaveAnActiveTask(msgChatId)) {
                 text = YOU_DONT_HAVE_AN_ACTIVE_TASK;
