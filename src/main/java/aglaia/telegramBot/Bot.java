@@ -2,6 +2,7 @@ package aglaia.telegramBot;
 
 import aglaia.telegramBot.model.keyboards.ReplyKeyBoardMenu;
 import aglaia.telegramBot.service.ActiveTaskService;
+import aglaia.telegramBot.service.RegistrationService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
@@ -40,7 +41,7 @@ public class Bot extends TelegramLongPollingCommandBot {
 
     public Bot(List<IBotCommand> commandList, ActiveTaskService ats) {
         super();
-        commandList.forEach(command -> register(command));
+        commandList.forEach(this::register);
         this.ats = ats;
 
     }
@@ -95,7 +96,7 @@ public class Bot extends TelegramLongPollingCommandBot {
 
         try {
             if (isAnswerCorrect) execute(ats.getRandomSticker(msgChatId));
-            if (text == ats.getRs().LET_S_START) {
+            if (text.equals(RegistrationService.LET_S_START)) {
                 text = "There are many interesting tasks. What do you want to solve?";
                 execute(ReplyKeyBoardMenu.getMainMenuKeyboard(msgChatId, text));
             } else {
@@ -105,17 +106,12 @@ public class Bot extends TelegramLongPollingCommandBot {
             //логируем сбой Telegram Bot API, используя userName
             System.out.println("TelegramApiException e: " + e.getMessage());
         }
-
-
     }
 
-    // TODO: 21.11.2022 database postgress
+    // DONE: 21.11.2022 database postgress
     // TODO: 21.11.2022 make rest and point - сделать так чтобы через рест и поинт можно было бы сохдавать новые таски
-
     // todo если два или три раза неправильно ответил - все, задача отмечается как решенная не правильно, показывает правильный ответ
     // TODO: 21.11.2022 возможность пропустить задачу и возможность вернуться к нерешенным задачам
-
-    // TODO: 24.11.2022 Реализация регистрации. Если новый пользователь - то включить свою программу по обмену сообщениями.
-
+    // DONE: 24.11.2022 Реализация регистрации. Если новый пользователь - то включить свою программу по обмену сообщениями.
 
 }

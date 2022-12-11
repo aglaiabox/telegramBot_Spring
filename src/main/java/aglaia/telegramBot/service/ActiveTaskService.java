@@ -1,9 +1,11 @@
 package aglaia.telegramBot.service;
 
 import aglaia.telegramBot.database.Database;
-import aglaia.telegramBot.entity.AbstractTask;
-import aglaia.telegramBot.entity.KangTask;
-import aglaia.telegramBot.entity.UserBot;
+import aglaia.telegramBot.model.entity.tasks.AbstractTask;
+import aglaia.telegramBot.model.entity.tasks.GeneratedTask;
+import aglaia.telegramBot.model.entity.tasks.KangTask;
+import aglaia.telegramBot.model.entity.UserBot;
+import aglaia.telegramBot.model.entity.tasks.TypesOfTasks;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
@@ -15,15 +17,17 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.ArrayList;
 
-@Getter @Setter
+@Getter
+@Setter
 @Component
 // хождение в базу данных и доставание активного текущего таска
 public class ActiveTaskService {
 
-    final Database database;
     RegistrationService rs;
+    UserBotService userBotService;
 
-    private static final ArrayList <String> listStikersId;
+    private static final ArrayList<String> listStikersId;
+
     static {
         listStikersId = new ArrayList<>();
         listStikersId.add("CAACAgIAAxkBAAEGflNje5VhaHQ5Hln4bQFKFnETijrqggACFQADwDZPE81WpjthnmTnKwQ");
@@ -57,6 +61,7 @@ public class ActiveTaskService {
     }
 
     private static final ArrayList<String> listRightComments;
+
     static {
         listRightComments = new ArrayList<>();
         listRightComments.add("Nice!");
@@ -66,12 +71,12 @@ public class ActiveTaskService {
         listRightComments.add("I'm proud for you!");
     }
 
-    public ActiveTaskService(Database database, RegistrationService rs) {
-        this.database = database;
+    public ActiveTaskService(RegistrationService rs, UserBotService userBotService) {
         this.rs = rs;
+        this.userBotService = userBotService;
     }
 
-    public SendSticker getRandomSticker (long msgChatId){
+    public SendSticker getRandomSticker(long msgChatId) {
         int i = (int) (Math.random() * listStikersId.size());
         String stickerId = listStikersId.get(i);
         SendSticker sendSticker = new SendSticker();
@@ -81,40 +86,40 @@ public class ActiveTaskService {
         return sendSticker;
     }
 
-    public boolean isUserHaveAnActiveTask (long msgChatId){
-        if (database.getUserFromDatabase(msgChatId).getActualTask() == null) return false;
-        return true;
+    public boolean isUserHaveAnActiveTask(long msgChatId) {
+        if (userBotService.findByChatId(msgChatId).isEmpty()) throw new IllegalArgumentException();
+        return userBotService.findByChatId(msgChatId).get().getActualTask() != null;
     }
 
 
-    public boolean isAnswerCorrect (String incommingAnswer, long msgChatId) {
-        UserBot userBot = database.getUserFromDatabase(msgChatId);
+    public boolean isAnswerCorrect(String incommingAnswer, long msgChatId) {
+        if(userBotService.findByChatId(msgChatId).isEmpty()) throw new IllegalArgumentException();
+        UserBot userBot = userBotService.findByChatId(msgChatId).get();
         AbstractTask actualTask = userBot.getActualTask();
 
         if (actualTask.getCorrectAnswer().equalsIgnoreCase(incommingAnswer)) {
-            if (actualTask instanceof KangTask){
-                userBot.setIndexOfCurrentKangTask(userBot.getIndexOfCurrentKangTask()+1);
+            if (actualTask instanceof KangTask) {
+                userBot.setActualKangTaskDone(true);
+//                userBot.addKangTaskToListOfDone((KangTask) actualTask, true);
+//            } else {
+//                userBot.oneMoreDoneGeneratedTaskDone();
+            } else if (actualTask instanceof GeneratedTask) {
+                userBot.addOneDoneGeneratedTask();
             }
             userBot.setActualTask(null);
-
+            userBotService.save(userBot);
             return true;
         }
+        return false;
 
-        else {
-            return false;
-        }
     }
 
-    public String getRandomStringForRight () {
+    public String getRandomStringForRight() {
         int i = (int) (Math.random() * listRightComments.size());
         return listRightComments.get(i);
     }
 
-    public boolean isUserHaveMoreAttentionForThisTask(Long msgChatId){
-        return database.getUserFromDatabase(msgChatId).isUserHaveMoreAttentionForThisTask();
-    }
-
-    public String getAnswerString (Update update) {
+    public String getAnswerString(Update update) {
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             return callbackQuery.getData();
@@ -124,7 +129,7 @@ public class ActiveTaskService {
         }
     }
 
-    public Long getMsgChatId (Update update) {
+    public Long getMsgChatId(Update update) {
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
             return callbackQuery.getMessage().getChatId();
@@ -135,8 +140,7 @@ public class ActiveTaskService {
     }
 
     public boolean isRegistrationComplete(Long chartId) {
-        if (rs.isRegistrationComplete(chartId)) return true;
-        return false;
+        return rs.isRegistrationComplete(chartId);
     }
 
 
@@ -144,13 +148,5 @@ public class ActiveTaskService {
         return rs.setDataOfUserToDatabaseAddGetAnswer(msgChatId, incommingAnswer);
     }
 
-//    public String getCorrectAnswer (long msgChatId){
-//        UserBot userBot = database.getUserFromDatabase(msgChatId);
-//        AbstractTask actualTask = userBot.getActualTask();
-//        String correctAnswer = actualTask.getCorrectAnswer();
-//        actualTask = null;
-//        userBot.
-//        return
-//
-//    }
+
 }

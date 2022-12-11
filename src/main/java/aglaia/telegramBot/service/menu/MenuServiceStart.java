@@ -14,13 +14,4 @@ public class MenuServiceStart extends AbstractMenuService {
         this.rs = registrationService;
     }
 
-    public boolean isRegistrationComplete(Long chartId) {
-        if (rs.isThisUserExist(chartId) && rs.isThisUserHasName(chartId) && rs.isThisUserHasAge(chartId)) return true;
-        return false;
-    }
-
-
-    public String getTextToSend(Long chatId) {
-        return rs.getTextToSend(chatId);
-    }
 }

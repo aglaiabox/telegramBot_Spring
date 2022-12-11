@@ -1,8 +1,8 @@
 package aglaia.telegramBot.database;
 
-import aglaia.telegramBot.entity.GeneratedTask;
-import aglaia.telegramBot.entity.KangTask;
-import aglaia.telegramBot.entity.UserBot;
+import aglaia.telegramBot.model.entity.tasks.GeneratedTask;
+import aglaia.telegramBot.model.entity.tasks.KangTask;
+import aglaia.telegramBot.model.entity.UserBot;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 
@@ -12,75 +12,29 @@ import java.util.Map;
 @Component
 public class Database {
     private static volatile Database database;
-    Map<Integer, KangTask> kangTaskMapa;
-    Map<Long, UserBot> usersMapa;
+//    Map<Integer, KangTask> kangTaskMapa;
+//    Map<Long, UserBot> usersMapa;
 
 
     private Database() {
         if (database != null) {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
-        this.kangTaskMapa = new HashMap<>();
-        this.usersMapa = new HashMap<>();
+//        this.kangTaskMapa = new HashMap<>();
+//        this.usersMapa = new HashMap<>();
         addKangTaskToKangTaskMapa();
     }
 
-    public boolean isUserExist(long msgChatId) {
-        if (usersMapa.containsKey(msgChatId)) return true;
-        return false;
-    }
+//    public boolean isUserExist(long msgChatId) {
+//        if (usersMapa.containsKey(msgChatId)) return true;
+//        return false;
+//    }
 
-    public void addNewUserToDatabasa(UserBot userBot) {
-        usersMapa.put(userBot.getChatId(), userBot);
-    }
-
-    public UserBot getUserFromDatabase(long chatId) {
-        if (!isUserExist(chatId)) {
-            addNewUserToDatabasa(new UserBot(chatId));
-        }
-        return usersMapa.get(chatId);
-    }
-
-    public UserBot getUserFromDatabase(AbsSender absSender, long chatId) {
-        if (!isUserExist(chatId)) {
-            addNewUserToDatabasa(new UserBot(chatId));
-        }
-        return usersMapa.get(chatId);
-    }
-
-    public void addGeneratedTaskToUser(GeneratedTask generatedTask, long chatId) {
-        usersMapa.get(chatId).setActualTask(generatedTask);
-    }
-
-    public boolean isUserHaveActualGeneratedTask(long chatId) {
-        if (usersMapa.get(chatId).getActualTask() != null)
-            return true;
-        return false;
-    }
-
-    private Map<Integer, KangTask> getKangTaskMapa() {
-        return kangTaskMapa;
-    }
-
-    public KangTask getKangTaskByInd(int indexOfKangTask) {
-        if (!kangTaskMapa.containsKey(indexOfKangTask)) {
-            return null;
-        }
-        return kangTaskMapa.get(indexOfKangTask);
-    }
-
-    public void setKangTaskMapa(Map<Integer, KangTask> kangTaskMapa) {
-        this.kangTaskMapa = kangTaskMapa;
-    }
+//    public void addNewUserToDatabasa(UserBot userBot) {
+//        usersMapa.put(userBot.getChatId(), userBot);
+//    }
 
 
-    public Map<Long, UserBot> getUsersMapa() {
-        return usersMapa;
-    }
-
-    public void setUsersMapa(Map<Long, UserBot> usersMapa) {
-        this.usersMapa = usersMapa;
-    }
 
     private void addKangTaskToKangTaskMapa() {
 
@@ -108,9 +62,6 @@ public class Database {
         kangTask3.setDifficultyLevel(3);
         // B 44 59
 
-        kangTaskMapa.put(kangTask.getIndex(), kangTask);
-        kangTaskMapa.put(kangTask2.getIndex(), kangTask2);
-        kangTaskMapa.put(kangTask3.getIndex(), kangTask3);
 
     }
 

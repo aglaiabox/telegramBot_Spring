@@ -1,9 +1,9 @@
 package aglaia.telegramBot.commands.operation;
 
 
-import aglaia.telegramBot.entity.AbstractTask;
+import aglaia.telegramBot.model.entity.tasks.AbstractTask;
 import aglaia.telegramBot.model.keyboards.KeyBoardABCDE;
-import aglaia.telegramBot.service.operation.CommandKangService;
+import aglaia.telegramBot.service.operation.KangCommandService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -13,8 +13,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Component
 public class TaskCommandKang extends AbstractTaskCommand {
 
-    public TaskCommandKang(CommandKangService commandKangService) {
-        super("kangaroo", "Задания Кенгуру", commandKangService);
+    public TaskCommandKang(KangCommandService kangCommandService) {
+        super("kangaroo", "Задания Кенгуру", kangCommandService);
     }
 
     @Override

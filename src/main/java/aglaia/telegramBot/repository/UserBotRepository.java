@@ -1,23 +1,15 @@
 package aglaia.telegramBot.repository;
 
-import aglaia.telegramBot.entity.UserBot;
+import aglaia.telegramBot.model.entity.UserBot;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface UserBotRepository extends JpaRepository <UserBot, Long>
-{
 
-//    List<UserBot> findUserByUserId(Long userId);
-    //просто правильное название метода даст возможность
-    //избежать запросов на SQL
+public interface UserBotRepository extends JpaRepository<UserBot, Long> {
 
-//    @Query("select u from Users u where u.email like '%@gmail.com%'")
-//        //если этого мало можно написать
-//        //собственный запрос на языке похожем на SQL
-//    List<UserBot> findWhereEmailIsGmail();
-//
-//    @Query(value = "select * from users where name like '%smith%'", nativeQuery = true)
-//        //если и этого мало - можно написать запрос на чистом SQL и все это будет работать
-//    List<Users> findWhereNameStartsFromSmith();
+    Optional<UserBot> findByChatId(Long chatId);
+
+    boolean existsByChatId(Long chatId);
 }

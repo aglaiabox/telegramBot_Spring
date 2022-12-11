@@ -1,4 +1,4 @@
-package aglaia.telegramBot.entity;
+package aglaia.telegramBot.model.entity.tasks;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,15 +9,12 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class AbstractTask {
-//    @Id
-//    @Column(name = "id", nullable = false)
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@MappedSuperclass
 
-//    @Column
+//@Entity
+public abstract class AbstractTask {
+
     String problem;
-//    @Column
     String correctAnswer;
 
     public AbstractTask(String problem, String correctAnswer) {

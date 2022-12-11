@@ -1,6 +1,6 @@
 package aglaia.telegramBot.commands.operation;
 
-import aglaia.telegramBot.entity.AbstractTask;
+import aglaia.telegramBot.model.entity.tasks.AbstractTask;
 import aglaia.telegramBot.service.operation.AbstractCommandService;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,8 +11,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public abstract class AbstractTaskCommand implements IBotCommand {
 
     public static final String NO_MORE_TASKS = "Unfortunately, all tasks was finished. Please try to come later";
-    private String identifier;
-    private String description;
+    private final String identifier;
+    private final String description;
     protected AbstractCommandService abstractCommandService;
 
     AbstractTaskCommand(String identifier, String description, AbstractCommandService abstractCommandService) {

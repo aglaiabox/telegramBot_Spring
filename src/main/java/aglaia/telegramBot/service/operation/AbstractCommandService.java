@@ -1,18 +1,17 @@
 package aglaia.telegramBot.service.operation;
 
-import aglaia.telegramBot.entity.AbstractTask;
-import aglaia.telegramBot.database.Database;
-import aglaia.telegramBot.entity.GeneratedTask;
-import aglaia.telegramBot.entity.KangTask;
+import aglaia.telegramBot.model.entity.tasks.AbstractTask;
+import aglaia.telegramBot.service.KangTaskService;
+import aglaia.telegramBot.service.UserBotService;
 
 public abstract class AbstractCommandService {
-    Database database;
+    UserBotService userBotService;
 
-    public AbstractCommandService(Database database) {
-        this.database = database;
+    public AbstractCommandService(UserBotService userBotService) {
+        this.userBotService = userBotService;
     }
 
-// отвечает за выдачу задания
+    // отвечает за выдачу задания
     public abstract AbstractTask giveMeATask(Long chatId);
 
 }

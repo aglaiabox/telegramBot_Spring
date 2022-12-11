@@ -1,63 +1,67 @@
 package aglaia.telegramBot.service;
 
-import aglaia.telegramBot.database.Database;
+import aglaia.telegramBot.model.entity.UserBot;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class RegistrationService {
     public static final String LET_S_START = "Let's /start";
-    Database database;
+    public static final String HI_MY_NAME_IS_MATH_ROBOT_WHAT_IS_YOUR_NAME = "Hi! My name is Math Robot. I'm robot. I'm so glad to see you! What is your name?";
+    public static final String NICE_TO_MEET_YOU_S_HOW_OLD_ARE_YOU = "Nice to meet you, %s. How old are you?";
+    public static final String I_CAN_T_UNDERSTAND_YOU_PLEASE_DIVE_ME_A_DIGIT_HOW_OLD_ARE_YOU = "I can't understand you. Please dive me a digit. How old are you?";
+    //    Database database;
+    UserBotService userBotService;
 
-    public RegistrationService (Database database) {
-        this.database = database;
+    public RegistrationService(UserBotService userBotService) {
+        this.userBotService = userBotService;
     }
 
-    public boolean isThisUserExist (Long chartId){
-        if (database.getUserFromDatabase(chartId) != null) return true;
-        return false;
+    public boolean isThisUserExist(Long chatId) {
+        return userBotService.existsByChatId(chatId);
     }
 
-    public boolean isThisUserHasName (Long chartId){
-        if (database.getUserFromDatabase(chartId).getName() != null) return true;
-        return false;
-    }
-
-    public boolean isThisUserHasAge (Long chartId){
-        if (database.getUserFromDatabase(chartId).getAge() != 0) return true;
-        return false;
-    }
-
-    public boolean isRegistrationComplete (Long chartId){
-        if (isThisUserExist(chartId) && isThisUserHasName(chartId) && isThisUserHasAge(chartId)) return true;
-        return false;
-    }
-
-
-
-    public String getTextToSend(Long chatId) {
-        if (database.getUserFromDatabase(chatId).isItFirstContact()) {
-            database.getUserFromDatabase(chatId).setItFirstContact(false);
-            return "Hi! My name is Math Robot. I'm robot. I'm so glad to see you! What is your name?";
-        } else if (!isThisUserHasName(chatId)) {
-            return "I still don't know your name! How can I call you?";
-        } else if (!isThisUserHasAge(chatId)) {
-            return "How old are you?";
+    public boolean isThisUserHasName(Long chatId) {
+        if (userBotService.findByChatId(chatId).isPresent()){
+            return userBotService.findByChatId(chatId).get().getName() != null;
         } else {
-            return "Nice to meet you!";
+            throw new IllegalArgumentException();
         }
+
+    }
+
+    public boolean isThisUserHasAge(Long chatId) {
+        if (userBotService.findByChatId(chatId).isPresent()){
+            return userBotService.findByChatId(chatId).get().getAge() != 0;
+        } else {
+            throw new IllegalArgumentException();
+        }
+
+    }
+
+    public boolean isRegistrationComplete(Long chatId) {
+        return isThisUserExist(chatId) && isThisUserHasName(chatId) && isThisUserHasAge(chatId);
     }
 
 
     public String setDataOfUserToDatabaseAddGetAnswer(Long chatId, String incommingAnswer) {
-        if (isThisUserExist(chatId) && !isThisUserHasName(chatId)){
-            database.getUserFromDatabase(chatId).setName(incommingAnswer);
-            return "Nice to meet you, "+incommingAnswer+" How old are you?";
-        } else if (isThisUserHasName(chatId) && !isThisUserHasAge(chatId)){
+        if (!userBotService.existsByChatId(chatId)) {
+            userBotService.save(new UserBot(chatId));
+            return HI_MY_NAME_IS_MATH_ROBOT_WHAT_IS_YOUR_NAME;
+        } else if (isThisUserExist(chatId) && !isThisUserHasName(chatId)) {
+            UserBot userBot = userBotService.findByChatId(chatId).get();
+            userBot.setName(incommingAnswer);
+            userBotService.save(userBot);
+            return String.format(NICE_TO_MEET_YOU_S_HOW_OLD_ARE_YOU, incommingAnswer);
+        } else if (isThisUserHasName(chatId) && !isThisUserHasAge(chatId)) {
             try {
                 int age = Integer.parseInt(incommingAnswer.trim());
-                database.getUserFromDatabase(chatId).setAge(age);
-            } catch (Exception e){
-                return "I can't understand you. Please dive me a digital number. I should know how old are you?";
+                UserBot userBot = userBotService.findByChatId(chatId).get();
+                userBot.setAge(age);
+                userBotService.save(userBot);
+            } catch (Exception e) {
+                return I_CAN_T_UNDERSTAND_YOU_PLEASE_DIVE_ME_A_DIGIT_HOW_OLD_ARE_YOU;
             }
         }
         return LET_S_START;
