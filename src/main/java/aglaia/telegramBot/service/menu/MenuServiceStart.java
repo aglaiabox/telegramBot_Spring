@@ -1,17 +1,15 @@
 package aglaia.telegramBot.service.menu;
 
-import aglaia.telegramBot.database.Database;
-import aglaia.telegramBot.service.RegistrationService;
+import aglaia.telegramBot.service.RegistrationAndSettingService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MenuServiceStart extends AbstractMenuService {
 
-    RegistrationService rs;
+    RegistrationAndSettingService rs;
 
-    public MenuServiceStart(Database database, RegistrationService registrationService) {
-        super(database);
-        this.rs = registrationService;
+    public MenuServiceStart(RegistrationAndSettingService registrationAndSettingService) {
+        this.rs = registrationAndSettingService;
     }
 
 }

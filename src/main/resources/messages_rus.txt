@@ -1,0 +1,16 @@
+
+YOU_DONT_HAVE_AN_ACTIVE_TASK: "У тебя нет активного задания. Пожалуйста, выбери, что ты хочешь тренировать"
+WRONG: "Ошибочка вышла. Попробуй еще раз"
+HI_MY_NAME_IS_MATH_ROBOT_WHAT_IS_YOUR_NAME: "Привет! Я - математический ро-бот. Рад тебя видеть! Как тебя зовут?"
+NICE_TO_MEET_YOU_S_HOW_OLD_ARE_YOU: "Приятно познакомиться, %s. Сколько тебе лет?"
+I_CAN_T_UNDERSTAND_YOU_PLEASE_DIVE_ME_A_DIGIT_HOW_OLD_ARE_YOU: "Я тебя не понимаю, пожалуйста, напиши числом сколько тебе лет."
+LANGUAGE: "Теперь язык - русский"
+RIGHT_COMMENT_1: "Молодец!"
+RIGHT_COMMENT_2: "Именно!!!"
+RIGHT_COMMENT_3: "Совершенно верно"
+RIGHT_COMMENT_4: "Умница!"
+RIGHT_COMMENT_5: "Я тобой горжусь!"
+TASKS_WHAT_DO_YOU_WANT_TO_SOLVE: "У меня много интересных заданий. Что ты хочешь решить сегодня?"
+NO_MORE_TASKS: "Вау, все текстовые задачи решены! Попозже появятся новые."
+
+

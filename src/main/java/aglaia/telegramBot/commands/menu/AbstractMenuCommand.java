@@ -1,6 +1,6 @@
 package aglaia.telegramBot.commands.menu;
 
-import aglaia.telegramBot.service.RegistrationService;
+import aglaia.telegramBot.service.RegistrationAndSettingService;
 import aglaia.telegramBot.service.menu.AbstractMenuService;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -13,16 +13,16 @@ public abstract class AbstractMenuCommand implements IBotCommand {
     private final String identifier;
     private final String description;
     protected AbstractMenuService abstractMenuService;
-    protected RegistrationService registrationService;
+    protected RegistrationAndSettingService registrationAndSettingService;
     boolean keepActiveTask;
 
-    AbstractMenuCommand(String identifier, String description, AbstractMenuService abstractMenuService, RegistrationService registrationService, boolean keepActiveTask) {
+    AbstractMenuCommand(String identifier, String description, AbstractMenuService abstractMenuService, RegistrationAndSettingService registrationAndSettingService, boolean keepActiveTask) {
         super();
         this.description = description;
         this.identifier = identifier;
         this.abstractMenuService = abstractMenuService;
         this.keepActiveTask = keepActiveTask;
-        this.registrationService = registrationService;
+        this.registrationAndSettingService = registrationAndSettingService;
     }
 
     @Override
@@ -38,7 +38,7 @@ public abstract class AbstractMenuCommand implements IBotCommand {
     @Override
     public void processMessage(AbsSender absSender, Message message, String[] strings) {
         String textToSend;
-        textToSend = registrationService.setDataOfUserToDatabaseAddGetAnswer(message.getChatId(), message.getText());
+        textToSend = registrationAndSettingService.setDataOfUserToDatabaseAddGetAnswer(message.getChatId(), message.getText());
         Long chatId = message.getChatId();
         SendMessage answer;
 

@@ -3,31 +3,27 @@ package aglaia.telegramBot.model.keyboards;
 import aglaia.telegramBot.Bot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ReplyKeyBoardMenu {
+public class ReplyKeyBoardLanguage {
 
+    public static KeyboardRow getLanguageBottoms (){
 
-    public static final String MULTIPLY = "Тренеруем умножение";
-    public static final String DIVISION = "Тренеруем деление";
-    public static final String KANG_TASK = "Текстовая задача";
+        KeyboardRow keyboardRow = new KeyboardRow();
+        keyboardRow.add(new KeyboardButton(Bot.RUS));
+        keyboardRow.add(new KeyboardButton(Bot.ENG));
 
-    public static SendMessage getMainMenuKeyboard(long chatId, String textToSend) {
+        return keyboardRow;
+    }
 
+    public static SendMessage getLanguageKeyboard(long chatId, String textToSend) {
         ArrayList<KeyboardRow> keyboardRows = new ArrayList<>();
-        KeyboardRow keyboardRow1 = new KeyboardRow();
-        keyboardRow1.add(new KeyboardButton(Bot.MULTIPLY));
-        keyboardRow1.add(new KeyboardButton(Bot.DIVISION));
-        KeyboardRow keyboardRow2 = new KeyboardRow();
-        keyboardRow2.add(new KeyboardButton(Bot.KANG_TASK));
-        keyboardRows.add(keyboardRow1);
-        keyboardRows.add(keyboardRow2);
-        keyboardRows.add(ReplyKeyBoardLanguage.getLanguageBottoms());
-
-
+        keyboardRows.add(getLanguageBottoms());
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setKeyboard(keyboardRows);
         SendMessage sendMessage = new SendMessage();

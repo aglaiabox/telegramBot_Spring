@@ -1,21 +1,17 @@
 package aglaia.telegramBot.service;
 
 import aglaia.telegramBot.model.entity.UserBot;
+import aglaia.telegramBot.model.entity.tasks.LanguageType;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
-public class RegistrationService {
-    public static final String LET_S_START = "Let's /start";
-    public static final String HI_MY_NAME_IS_MATH_ROBOT_WHAT_IS_YOUR_NAME = "Hi! My name is Math Robot. I'm robot. I'm so glad to see you! What is your name?";
-    public static final String NICE_TO_MEET_YOU_S_HOW_OLD_ARE_YOU = "Nice to meet you, %s. How old are you?";
-    public static final String I_CAN_T_UNDERSTAND_YOU_PLEASE_DIVE_ME_A_DIGIT_HOW_OLD_ARE_YOU = "I can't understand you. Please dive me a digit. How old are you?";
-    //    Database database;
+public class RegistrationAndSettingService {
     UserBotService userBotService;
+    ConstantMessagesService cms;
 
-    public RegistrationService(UserBotService userBotService) {
+    public RegistrationAndSettingService(UserBotService userBotService, ConstantMessagesService cms) {
         this.userBotService = userBotService;
+        this.cms = cms;
     }
 
     public boolean isThisUserExist(Long chatId) {
@@ -46,24 +42,36 @@ public class RegistrationService {
 
 
     public String setDataOfUserToDatabaseAddGetAnswer(Long chatId, String incommingAnswer) {
-        if (!userBotService.existsByChatId(chatId)) {
+        LanguageType languageType = userBotService.getLanguage(chatId);
+        if (!userBotService.existsByChatId(chatId) && languageType == null) {
             userBotService.save(new UserBot(chatId));
-            return HI_MY_NAME_IS_MATH_ROBOT_WHAT_IS_YOUR_NAME;
-        } else if (isThisUserExist(chatId) && !isThisUserHasName(chatId)) {
+            return "/rus /eng";
+        } else if (!isThisUserHasName(chatId)) {
             UserBot userBot = userBotService.findByChatId(chatId).get();
+            // todo тут надо добавить проверку имени
             userBot.setName(incommingAnswer);
             userBotService.save(userBot);
-            return String.format(NICE_TO_MEET_YOU_S_HOW_OLD_ARE_YOU, incommingAnswer);
-        } else if (isThisUserHasName(chatId) && !isThisUserHasAge(chatId)) {
+            return String.format(cms.getMsgText(languageType, "NICE_TO_MEET_YOU_S_HOW_OLD_ARE_YOU"), incommingAnswer);
+        } else if (!isThisUserHasAge(chatId)) {
             try {
                 int age = Integer.parseInt(incommingAnswer.trim());
                 UserBot userBot = userBotService.findByChatId(chatId).get();
                 userBot.setAge(age);
                 userBotService.save(userBot);
+                return cms.getMsgText(languageType, "TASKS_WHAT_DO_YOU_WANT_TO_SOLVE");
             } catch (Exception e) {
-                return I_CAN_T_UNDERSTAND_YOU_PLEASE_DIVE_ME_A_DIGIT_HOW_OLD_ARE_YOU;
+                return cms.getMsgText(languageType, "I_CAN_T_UNDERSTAND_YOU_PLEASE_DIVE_ME_A_DIGIT_HOW_OLD_ARE_YOU");
             }
         }
-        return null;
+        return "не понял";
+    }
+
+    public String getMsgTextWhenChangeLanguage(Long chatId, LanguageType languageType) {
+        String text = cms.getMsgText(languageType, "LANGUAGE");
+        String text2 = "";
+        if (isThisUserExist(chatId) && !isThisUserHasName(chatId)) {
+            text2 = cms.getMsgText(languageType, "HI_MY_NAME_IS_MATH_ROBOT_WHAT_IS_YOUR_NAME");
+        }
+        return text + "\n" + text2;
     }
 }

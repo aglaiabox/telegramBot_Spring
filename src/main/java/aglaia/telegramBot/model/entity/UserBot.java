@@ -1,15 +1,11 @@
 package aglaia.telegramBot.model.entity;
 
-import aglaia.telegramBot.model.entity.tasks.AbstractTask;
-import aglaia.telegramBot.model.entity.tasks.GeneratedTask;
-import aglaia.telegramBot.model.entity.tasks.KangTask;
-import aglaia.telegramBot.model.entity.tasks.TypesOfTasks;
+import aglaia.telegramBot.model.entity.tasks.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 
 @Entity
 @Getter
@@ -27,6 +23,7 @@ public class UserBot {
     @ManyToOne(cascade = CascadeType.ALL)
     private KangTask actualKangTask;
     private boolean actualKangTaskDone;
+    private LanguageType languageType;
 
     //todo здесь надо прописать логику чтобы тип таска менялся вместе с назначением нового актуального таска
 

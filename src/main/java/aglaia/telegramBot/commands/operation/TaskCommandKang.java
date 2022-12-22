@@ -3,7 +3,8 @@ package aglaia.telegramBot.commands.operation;
 
 import aglaia.telegramBot.model.entity.tasks.AbstractTask;
 import aglaia.telegramBot.model.keyboards.KeyBoardABCDE;
-import aglaia.telegramBot.service.operation.KangCommandService;
+import aglaia.telegramBot.service.ActiveTaskService;
+import aglaia.telegramBot.service.operation.CommandServiceKang;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -12,9 +13,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
 public class TaskCommandKang extends AbstractTaskCommand {
+    ActiveTaskService activeTaskService;
 
-    public TaskCommandKang(KangCommandService kangCommandService) {
-        super("kangaroo", "Задания Кенгуру", kangCommandService);
+    public TaskCommandKang(CommandServiceKang commandServiceKang, ActiveTaskService activeTaskService) {
+        super("kangaroo", "Задания Кенгуру", commandServiceKang);
+        this.activeTaskService = activeTaskService;
     }
 
     @Override
@@ -26,7 +29,8 @@ public class TaskCommandKang extends AbstractTaskCommand {
             answer.setText(task.getProblem());
             answer.setReplyMarkup(KeyBoardABCDE.getABCDEAnswers());
         } else {
-            answer.setText(NO_MORE_TASKS);
+            String text = activeTaskService.getTextByNameOfString(message.getChatId(), "NO_MORE_TASKS");
+            answer.setText(text);
         }
 
         answer.setChatId(message.getChatId());

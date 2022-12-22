@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class KangCommandService extends AbstractCommandService {
+public class CommandServiceKang extends AbstractCommandService {
     KangTaskService kangTaskService;
 
-    public KangCommandService(UserBotService userBotService, KangTaskService kangTaskService) {
+    public CommandServiceKang(UserBotService userBotService, KangTaskService kangTaskService) {
         super(userBotService);
         this.kangTaskService = kangTaskService;
     }
@@ -30,7 +30,7 @@ public class KangCommandService extends AbstractCommandService {
             kangTask = kangTaskService.getFirst();
             System.out.println(kangTask.getProblem());
             userBot.setActualTask(kangTask);
-        } else if (userBot.isActualKangTaskDone() && kangTask.getNext() !=null) {
+        } else if (userBot.isActualKangTaskDone() && kangTask.getNext() != null) {
             kangTask = kangTask.getNext();
             userBot.setActualTask(kangTask);
             userBot.setActualKangTaskDone(false);

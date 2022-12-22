@@ -2,7 +2,8 @@ package aglaia.telegramBot;
 
 import aglaia.telegramBot.model.keyboards.ReplyKeyBoardMenu;
 import aglaia.telegramBot.service.ActiveTaskService;
-import aglaia.telegramBot.service.RegistrationService;
+import aglaia.telegramBot.service.ConstantMessagesService;
+import aglaia.telegramBot.service.RegistrationAndSettingService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
@@ -10,7 +11,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.List;
+import java.util.*;
 
 
 @Component
@@ -18,32 +19,19 @@ public class Bot extends TelegramLongPollingCommandBot {
     public static final String MULTIPLY = "/multiply";
     public static final String DIVISION = "/division";
     public static final String KANG_TASK = "/kangaroo";
-    public static final String TRY_AGAIN = "Try again";
-    public static final String RIGHT_ANSWER = "Great job! You are right!" + System.lineSeparator() +
-            " What do you want next:" + System.lineSeparator() +
-            MULTIPLY + System.lineSeparator() + DIVISION + System.lineSeparator() + KANG_TASK;
-    public static final String DON_T_HAVE_AN_ACTIVE_TASK = "You don't have an active task. PLease tell me /hello for getting one";
-    public static final String VERONICA_HI = "Veronica, hi! ";
-    public static final String VERONICA_I_LOVE_U = "Post Scriptum: I LOVE U";
-    public static final String VERONICAs_ID = "5654062987";
-    public static final String HI_THERE = ", hi there and welcome! my name is Math bot and I'm ready to give your new interesting math tasks!";
-
-    public static final String YOU_DONT_HAVE_AN_ACTIVE_TASK = "You don't have an active task. Please chose one of the options: " + System.lineSeparator() +
-            Bot.MULTIPLY + System.lineSeparator() + Bot.DIVISION + System.lineSeparator() + Bot.KANG_TASK;
-    public static final String RIGHT = "That's right!";
-
-    public static final String WRONG = "Looks like you make some mistake. Try again";
+    public static final String RUS = "/rus";
+    public static final String ENG = "/eng";
 
     String BOT_NAME = System.getenv("BOT_NAME");
     String BOT_USERNAME = System.getenv("BOT_USERNAME");
     String BOT_TOKEN = System.getenv("BOT_TOKEN");
     ActiveTaskService ats;
 
+
     public Bot(List<IBotCommand> commandList, ActiveTaskService ats) {
         super();
-        commandList.forEach(command -> register(command));
+        commandList.forEach(this::register);
         this.ats = ats;
-
     }
 
     @Override
@@ -80,27 +68,20 @@ public class Bot extends TelegramLongPollingCommandBot {
         // если регистрация не завершена - то идем регистрироваться
         if (!ats.isRegistrationComplete(msgChatId)) {
             text = ats.setDataOfUserToDatabaseAddGetAnswer(msgChatId, incommingAnswer);
-        // в другом случае, это должен быть ответ на задание
+        // в другом случае, это должен быть ответ на задание. Проверяем есть ли активный такс
+        } else if (ats.isUserHaveAnActiveTask(msgChatId)) {
+            isAnswerCorrect = ats.isAnswerCorrect(incommingAnswer, msgChatId);
+            text = ats.getText(msgChatId, isAnswerCorrect);
+            // иначе предлагаем выбрать таск и решать его
         } else {
-            if (!ats.isUserHaveAnActiveTask(msgChatId)) {
-                text = YOU_DONT_HAVE_AN_ACTIVE_TASK;
-            } else {
-                isAnswerCorrect = ats.isAnswerCorrect(incommingAnswer, msgChatId);
-                if (isAnswerCorrect) {
-                    text = ats.getRandomStringForRight();
-                } else {
-                    text = WRONG;
-                }
-            }
-
+            text = ats.getTextIfNoActualTask(msgChatId);
         }
         sendMessage.setText(text);
         sendMessage.setChatId(msgChatId.toString());
 
         try {
             if (isAnswerCorrect) execute(ats.getRandomSticker(msgChatId));
-            if (text.equals(RegistrationService.LET_S_START)) {
-                text = "There are many interesting tasks. What do you want to solve?";
+            if (text.equals(ats.getTextByNameOfString(msgChatId, "TASKS_WHAT_DO_YOU_WANT_TO_SOLVE"))) {
                 execute(ReplyKeyBoardMenu.getMainMenuKeyboard(msgChatId, text));
             } else {
                 execute(sendMessage);

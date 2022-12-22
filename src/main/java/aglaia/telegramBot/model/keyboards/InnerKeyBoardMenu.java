@@ -17,6 +17,7 @@ public class InnerKeyBoardMenu {
     public static final String KANG_TASK = "Текстовая задача";
 
 
+
     public static SendMessage getMenu(long chatId) {
         InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();
 
@@ -38,9 +39,12 @@ public class InnerKeyBoardMenu {
         inlineKeyboardButton3.setCallbackData(Bot.KANG_TASK);
         rowList2.add(inlineKeyboardButton3);
 
+
+
         List<List<InlineKeyboardButton>> rowsList = new ArrayList<>();
         rowsList.add(rowList1);
         rowsList.add(rowList2);
+        rowsList.add(InnerKeyBoardLanguage.getLanguageBottoms());
         inlineKeyboard.setKeyboard(rowsList);
 
         SendMessage sendMessage = new SendMessage();
