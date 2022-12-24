@@ -26,7 +26,7 @@ public class ConstantMessagesService {
 
     String nameOfRightString = "RIGHT_COMMENT_";
     int howManyCounsOfRightStringIsHere = 5;
-    int howManyStickersIsHere = 28;
+    int howManyStickersIsHere = 33;
 
     public ConstantMessagesService() {
         namesOfFiles = new HashMap<>();
