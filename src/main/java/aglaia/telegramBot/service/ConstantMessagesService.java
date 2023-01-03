@@ -3,6 +3,7 @@ package aglaia.telegramBot.service;
 import aglaia.telegramBot.model.entity.tasks.LanguageType;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -17,6 +18,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Component
+@Log4j2
 
 public class ConstantMessagesService {
     private final String PATH = "src/main/resources/";
@@ -43,12 +45,14 @@ public class ConstantMessagesService {
     }
 
     public String getMsgText(LanguageType languageType, String key) {
+        log.info(String.format("Get msg \"%s\" in language %s", key, languageType.toString()));
         return mapOfMapsConstants.get(key).get(languageType);
     }
 
     public String getRandomStringForRight(LanguageType languageType) {
         int i = (int) (Math.random() * howManyCounsOfRightStringIsHere + 1);
         String name = nameOfRightString + i;
+        log.info(String.format("Get msg \"%s\" in language %s", nameOfRightString, languageType.toString()));
         return getMsgText(languageType, name);
     }
 
@@ -59,35 +63,41 @@ public class ConstantMessagesService {
         InputFile inputFile = new InputFile(stickerId);
         sendSticker.setSticker(inputFile);
         sendSticker.setChatId(msgChatId);
+        log.info(String.format("Get sticker N %d", i));
         return sendSticker;
     }
 
     public Map<String, Map<LanguageType, String>> addDataToMapOfMapsConstants(LanguageType languageType, String namesOfFiles) {
         Map<String, String> data = getDataFromFile(namesOfFiles);
         for (Map.Entry<String, String> entry : data.entrySet()) {
-            System.out.println("Key: " + entry.getKey());
-            System.out.println("Value: " + entry.getValue());
+            log.info("addDataToMapOfMapsConstants Key: " + entry.getKey() + "Value: " + entry.getValue());
             Map<LanguageType, String> m;
             if (mapOfMapsConstants.containsKey(entry.getKey())) {
                 m = mapOfMapsConstants.get(entry.getKey());
+                log.info("addDataToMapOfMapsConstants: add to HashMap");
             } else {
                 m = new HashMap<>();
+                log.info("addDataToMapOfMapsConstants: created new HashMap");
             }
             m.put(languageType, entry.getValue());
             mapOfMapsConstants.put(entry.getKey(), m);
         }
+        log.info("addDataToMapOfMapsConstants: mapa done");
         return mapOfMapsConstants;
     }
 
     private Map<String, String> getDataFromFile(String nameOfFile) {
         Map<String, String> data;
+        log.info("getDataFromFile");
         try (InputStream inputStream = new FileInputStream(PATH + nameOfFile)) {
             Yaml yaml = new Yaml();
             data = yaml.load(inputStream);
-            System.out.println(data);
+            log.info("getDataFromFile: successed: ");
         } catch (IOException e) {
+            log.error("getDataFromFile: error: "+e.getMessage());
             throw new RuntimeException(e);
         }
+        log.info("getDataFromFile data: " +data);
         return data;
     }
 

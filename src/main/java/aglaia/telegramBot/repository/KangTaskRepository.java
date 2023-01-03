@@ -1,5 +1,6 @@
 package aglaia.telegramBot.repository;
 
+import aglaia.telegramBot.model.entity.UserBot;
 import aglaia.telegramBot.model.entity.tasks.KangTask;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,5 +23,7 @@ public interface KangTaskRepository extends JpaRepository<KangTask, Long> {
             """,
             nativeQuery = true)
     long findIdOfFirst();
+
+    Optional<KangTask> findByProblem(String problem);
 
 }

@@ -1,62 +1,112 @@
 package aglaia.telegramBot;
 
+import aglaia.telegramBot.model.entity.tasks.KangTask;
 import aglaia.telegramBot.model.entity.tasks.LanguageType;
 import aglaia.telegramBot.service.ConstantMessagesService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.checkerframework.checker.units.qual.K;
 import org.telegram.telegrambots.meta.api.methods.send.SendSticker;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class Sandbox {
-    public static void main(String[] args) throws FileNotFoundException {
-        String path = "src/main/resources/stickers_list.txt";
-        InputStream inputStream = new FileInputStream(path);
-        Yaml yaml = new Yaml();
-        Map<String, String> data = yaml.load(inputStream);
-        System.out.println(data);
-
-        int i = (int) (Math.random() * 27 +1);
-        String key = "st"+i;
-        String stickerId = data.get(key);
-        System.out.println(i + ": " + stickerId);
-
-        stickerId = data.get("st1");
-        System.out.println("st1: "+stickerId);
-
+//    String path = "src/main/resources/messages_eng.txt";
+//    public static void main(String[] args)  {
+//        ArrayList <KangTask> list = addKangTaskToKangTaskMapa();
+//        KangTask kangTask = list.get(0);
 //
-//        Map<String, Map<LanguageType, String>> mapOfMaps= new HashMap<>();
+//        String path2 = "src/main/resources/kang_tasks.txt";
 //
-//        for (Map.Entry<String, String> stringStringEntry : data.entrySet()) {
-//            Map.Entry<String, String> entry = (Map.Entry) stringStringEntry;
-//            System.out.println("Key: " + entry.getKey());
-//            System.out.println("Value: " + entry.getValue());
-//            Map<LanguageType, String> m;
-//            if (mapOfMaps.containsKey(entry.getKey())){
-//                m = mapOfMaps.get(entry.getKey());
-//            } else {
-//                m = new HashMap<>();
-//            }
-//            m.put(languageType, entry.getValue());
-//            mapOfMaps.put(entry.getKey(), m);
+//
+//        for (KangTask k:
+//             list) {
+//            saveKangTAskToFile(k, path2);
 //        }
 //
-//        ConstantMessagesService constantMessagesService = new ConstantMessagesService();
+////        getYamlToObjectsFromFile(path2);
 //
 //
-//        System.out.println("print it");
-//        System.out.println(constantMessagesService.getMapOfMapsConstants());
 //
-//        System.out.println();
-//        System.out.println(constantMessagesService.getMsgText(LanguageType.RUS, "YOU_DONT_HAVE_AN_ACTIVE_TASK"));
-//        System.out.println(constantMessagesService.getMsgText(LanguageType.ENG, "YOU_DONT_HAVE_AN_ACTIVE_TASK"));
+//    }
 //
-
-
-    }
+//    private static void saveKangTAskToFile(KangTask kangTask, String path2) {
+//        // ObjectMapper создается так же, как и раньше
+//        ObjectMapper om = new ObjectMapper(new YAMLFactory());
+//
+//        // Мы пишем `employee` в` person2.yaml`
+//        try {
+//            om.writeValue(new File(path2), kangTask);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//
+//    private static KangTask getYamlToObjectsFromFile(String path2){
+//        // Загрузка файла YAML из папки
+//        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+//        try {
+//            File file = new File(classLoader.getResource("kang_tasks.txt").getFile());
+//        } catch (NullPointerException e) {
+//
+//        }
+//
+//
+//        // Создание нового ObjectMapper как YAMLFactory
+//        ObjectMapper om = new ObjectMapper(new YAMLFactory());
+//
+//        // Отображение сотрудника из файла YAML в класс Employee
+//        KangTask kangTask = null;
+//        try {
+//            kangTask = om.readValue(file, KangTask.class);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        // Распечатка информации
+//        System.out.println("Kang task info " + kangTask.toString());
+//
+//        // Получите доступ к первому элементу списка и распечатайте его
+////        System.out.println("Accessing first element: " + kangTask.getColleagues().get(0).toString());
+//    return kangTask;
+//    }
+//
+//    private static Map<String, String> getFromFileToMapa(String path) throws FileNotFoundException {
+//        InputStream inputStream = new FileInputStream(path);
+//        Yaml yaml = new Yaml();
+//        Map<String, String> data = yaml.load(inputStream);
+//        System.out.println(data);
+//        return data;
+//    }
+//
+//
+//    private static ArrayList <KangTask> addKangTaskToKangTaskMapa() {
+//
+//        ArrayList <KangTask> list = new ArrayList<>();
+//
+//        list.add(new KangTask("У Маши 3 брата и 2 сестры. Сколько братьев и сестер у ее брата Миши?",
+//                "3 брата и 2 сестры", "2 брата и 3 сестры",
+//                "2 сестры и 2 брата", "3 брата и 3 сестры",
+//                "невозможно определить", "b", 74, 77, 3));
+//
+//        list.add(new KangTask("Сумма восьми чисел равна 1997. Число 997 — одно из них. Если его " +
+//                "заменить на 799, то новая сумма будет равна", "2195", "1799", "1899", "1979", "1998",
+//                "b", 83, 81, 3));
+//        // B 83 81
+//
+//        list.add(new KangTask("У игрального кубика на всех парах противоположных граней сумма" +
+//                " очков одна и та же. Найдите эту сумму", "6", "7", "8", "9", "10",
+//                "b", 44, 59, 3));
+//        // B 44 59
+//
+//        return list;
+//
+//    }
 }

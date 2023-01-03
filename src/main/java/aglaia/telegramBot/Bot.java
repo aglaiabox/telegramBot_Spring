@@ -4,6 +4,10 @@ import aglaia.telegramBot.model.keyboards.ReplyKeyBoardMenu;
 import aglaia.telegramBot.service.ActiveTaskService;
 import aglaia.telegramBot.service.ConstantMessagesService;
 import aglaia.telegramBot.service.RegistrationAndSettingService;
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
@@ -11,11 +15,15 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 
 
+@Log4j2
 @Component
 public class Bot extends TelegramLongPollingCommandBot {
+    //static final Logger log = LoggerFactory.getLogger(TelegramLongPollingCommandBot.class);
     public static final String MULTIPLY = "/multiply";
     public static final String DIVISION = "/division";
     public static final String KANG_TASK = "/kangaroo";
@@ -28,10 +36,15 @@ public class Bot extends TelegramLongPollingCommandBot {
     ActiveTaskService ats;
 
 
+
+
     public Bot(List<IBotCommand> commandList, ActiveTaskService ats) {
         super();
         commandList.forEach(this::register);
         this.ats = ats;
+
+        log.info("Hello, Bot");
+
     }
 
     @Override
@@ -55,12 +68,12 @@ public class Bot extends TelegramLongPollingCommandBot {
         String text;
 
         //тут у нас несколько кейсов:
-        // 1 нет активного таска - тогда отпраавляем сообщение и предлагаем выбрать
+        //1 нет активного таска - тогда отпраавляем сообщение и предлагаем выбрать
         //2 ответ правильный - тогда отправляем и текст и стикер, плюс зачисляем баллы и сохраняем таск в решенный
         //3 ответ не правильный - тогда проверяем счетчик неправильных ответов по этому заданию.
         //      Если их становится три - показываем правильный ответ и сохраняем таск в сделанные, с пометной "не правильно" и баллы не зачисляем
-        // 4 пропустить задачу
-        // 5 показать правильный ответ
+        //4 пропустить задачу
+        //5 показать правильный ответ
         //6 попробовать решить пропущенные задачи
 
         boolean isAnswerCorrect = false;
@@ -88,7 +101,7 @@ public class Bot extends TelegramLongPollingCommandBot {
             }
         } catch (TelegramApiException e) {
             //логируем сбой Telegram Bot API, используя userName
-            System.out.println("TelegramApiException e: " + e.getMessage());
+            log.error("TelegramApiException e: " + e.getMessage());
         }
     }
 
@@ -99,3 +112,8 @@ public class Bot extends TelegramLongPollingCommandBot {
     // DONE: 24.11.2022 Реализация регистрации. Если новый пользователь - то включить свою программу по обмену сообщениями.
 
 }
+
+//todo  логирование. Куда пишет? в файл. Писать время и место. Лог формат, логоформаттер, лог аппенд  - определяет куда он добавляет(добавлять).
+// Лог левел - зависит от того, насколько важное сообщение, и есть ирархия
+
+//todo Задиплоидить

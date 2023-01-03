@@ -2,8 +2,10 @@ package aglaia.telegramBot.service;
 
 import aglaia.telegramBot.model.entity.UserBot;
 import aglaia.telegramBot.model.entity.tasks.LanguageType;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
+@Log4j2
 @Component
 public class RegistrationAndSettingService {
     UserBotService userBotService;
@@ -15,13 +17,16 @@ public class RegistrationAndSettingService {
     }
 
     public boolean isThisUserExist(Long chatId) {
+        log.info("check if user {} exist", chatId);
         return userBotService.existsByChatId(chatId);
     }
 
     public boolean isThisUserHasName(Long chatId) {
         if (userBotService.findByChatId(chatId).isPresent()){
+            log.info("check if user {} has name", chatId);
             return userBotService.findByChatId(chatId).get().getName() != null;
         } else {
+            log.error("ERROR!!! RegistrationAndSettingService check if user has name but user does not exist");
             throw new IllegalArgumentException();
         }
 
@@ -29,8 +34,10 @@ public class RegistrationAndSettingService {
 
     public boolean isThisUserHasAge(Long chatId) {
         if (userBotService.findByChatId(chatId).isPresent()){
+            log.info("check if user {} has name", chatId);
             return userBotService.findByChatId(chatId).get().getAge() != 0;
         } else {
+            log.error("ERROR!!! RegistrationAndSettingService check if user has age but user does not exist");
             throw new IllegalArgumentException();
         }
 

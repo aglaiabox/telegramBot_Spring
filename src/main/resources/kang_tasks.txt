@@ -1,0 +1,10 @@
+---
+problem: "У игрального кубика на всех парах противоположных граней сумма очков одн\
+  а и та же. Найдите эту сумму\n /a - 6; /b - 7; /c - 8; /d - 9; /e - 10"
+correctAnswer: "b"
+id: null
+scoreFor4: 44
+scoreFor5: 59
+difficultyLevel: 3
+userBots: null
+next: null
