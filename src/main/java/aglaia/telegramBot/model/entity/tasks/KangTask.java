@@ -54,6 +54,13 @@ public class KangTask extends AbstractTask {
         super(problemAndOptionsABCDE, correctAnswer);
     }
 
+    public KangTask(String problem, String correctAnswer, int scoreFor5, int scoreFor4, int difficultyLevel) {
+        super(problem, correctAnswer);
+        this.scoreFor4 = scoreFor4;
+        this.scoreFor5 = scoreFor5;
+        this.difficultyLevel = difficultyLevel;
+    }
+
     @Override
     public String toString() {
         return super.problem;

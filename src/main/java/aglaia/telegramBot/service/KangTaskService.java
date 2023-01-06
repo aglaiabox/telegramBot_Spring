@@ -1,27 +1,27 @@
 package aglaia.telegramBot.service;
 
-import aglaia.telegramBot.Bot;
+import aglaia.telegramBot.dto.KangTaskDto;
+import aglaia.telegramBot.mapping.MappingKangTask;
+import aglaia.telegramBot.mapping.MappingKangTaskDto;
 import aglaia.telegramBot.model.entity.tasks.KangTask;
 import aglaia.telegramBot.repository.KangTaskRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 @Service
 @Log4j2
 public class KangTaskService {
     private final KangTaskRepository kangTaskRepository;
+    MappingKangTask mappingKangTask;
+    MappingKangTaskDto mappingKangTaskDto;
 
-    public KangTaskService(KangTaskRepository kangTaskRepository) {
+    public KangTaskService(KangTaskRepository kangTaskRepository, MappingKangTask mappingKangTask, MappingKangTaskDto mappingKangTaskDto) {
         this.kangTaskRepository = kangTaskRepository;
-        addKangTaskToKangTaskMapa();
-
+        this.mappingKangTask = mappingKangTask;
+        this.mappingKangTaskDto = mappingKangTaskDto;
     }
 
     public KangTask getFirst() {
@@ -35,9 +35,20 @@ public class KangTaskService {
         return optionalKangTask.get();
     }
 
-    public KangTask save(KangTask kangTask) {
+    public KangTaskDto getById(Long id) {
+        Optional<KangTask> optionalKangTask = kangTaskRepository.findById(id);
+        if (optionalKangTask.isPresent()) {
+            log.info("Get Kang task id number {}, problem {}", id, optionalKangTask.get().getProblem());
+            return mappingKangTask.convert(optionalKangTask.get());
+        } else {
+            log.error("Get Kang task id number {} not exist", id);
+            return null;
+        }
+    }
+
+    public boolean save(KangTask kangTask) {
         log.info("Start saving new Kang task, problem: {}", kangTask.getProblem());
-        if (!isThisTaskExist(kangTask)){
+        if (!isThisTaskExist(kangTask)) {
             // тут он достает предыдущий канг таск и записывает в него ссылку на этот
             Optional<KangTask> optionalKangTaskLast = kangTaskRepository.findByEmptyNext();
 
@@ -51,11 +62,35 @@ public class KangTaskService {
             log.info("There is no Kang tasks in the base, this will be first");
         } else {
             log.error("this task exist in the base");
+            return false;
         }
-        return kangTask;
+        return true;
     }
 
-    private boolean isThisTaskExist (KangTask kangTask) {
+    public boolean delete(Long id) {
+        log.info("Try to delete Kang task N{}", id);
+        Optional<KangTask> optionalKangTask = kangTaskRepository.findById(id);
+        if (optionalKangTask.isEmpty()) {
+            log.error("Kang task N{} does not exist", id);
+            return false;
+        }
+        KangTask kangTask = optionalKangTask.get();
+        log.info("Kang task N{} exist", id);
+        Optional<KangTask> optionalPrevious = kangTaskRepository.findPrevious(id);
+        if (optionalPrevious.isPresent()) {
+            KangTask kangTaskPrevious = optionalPrevious.get();
+            log.info("Kang task N{} change feald next Kang Task", kangTaskPrevious.getId());
+            kangTaskPrevious.setNext(kangTask.getNext());
+            kangTaskRepository.save(kangTaskPrevious);
+        } else {
+            log.info("Kang task N{} is the first so it does not have previus", id);
+        }
+        kangTaskRepository.delete(kangTask);
+        log.info("Kang task N{} was deleted", id);
+        return true;
+    }
+
+    private boolean isThisTaskExist(KangTask kangTask) {
         Optional<KangTask> optionalKangTask = kangTaskRepository.findByProblem(kangTask.getProblem());
         log.info("check is this task original");
         return optionalKangTask.isPresent();
@@ -78,5 +113,23 @@ public class KangTaskService {
                 "b", 44, 59, 3));
         // B 44 59
 
+    }
+
+    public List<KangTask> getAll() {
+        return kangTaskRepository.findAll();
+    }
+
+    public List<KangTaskDto> getAllDto() {
+        List<KangTask> list = getAll();
+        List<KangTaskDto> listDto = list.stream().map(item -> mappingKangTask.convert(item)).toList();
+        log.info("we are in getAll method of KangTaskController, list of Kang Task:");
+        log.info(listDto);
+        return listDto;
+    }
+
+    public boolean save(KangTaskDto kangTaskDto) {
+        log.info("get new kang task DTO and save it to the base: {}", kangTaskDto.getProblem());
+        KangTask kangTask = mappingKangTaskDto.convert(kangTaskDto);
+        return save(kangTask);
     }
 }
