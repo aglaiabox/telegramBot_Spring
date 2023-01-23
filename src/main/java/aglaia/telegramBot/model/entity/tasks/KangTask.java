@@ -1,9 +1,8 @@
 package aglaia.telegramBot.model.entity.tasks;
 
 import aglaia.telegramBot.model.entity.UserBot;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,7 +11,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-
+@SuperBuilder
+@AllArgsConstructor
 public class KangTask extends AbstractTask {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

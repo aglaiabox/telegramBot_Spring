@@ -6,7 +6,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MappingKangTaskDto implements Converter<KangTaskDto, KangTask> {
+public class KangTaskDtoMapper implements Converter<KangTaskDto, KangTask> {
 
     @Override
     public KangTask convert(KangTaskDto source) {

@@ -3,6 +3,7 @@ package aglaia.telegramBot.model.entity.tasks;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @MappedSuperclass
-
+@SuperBuilder
 //@Entity
 public abstract class AbstractTask {
 
